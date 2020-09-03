@@ -229,7 +229,7 @@ extension JSON {
 		if let data = jsonString.data(using: .utf8) {
 			self.init(data)
 		} else {
-			self.init(NSNull())
+            self = .null
 		}
 	}
 
@@ -632,7 +632,7 @@ extension JSON: Swift.RawRepresentable {
 		}
 	}
 
-	fileprivate func _rawString(_ encoding: String.Encoding = .utf8, options: [writingOptionsKeys: Any], maxObjectDepth: Int = 10) throws -> String? {
+	private func _rawString(_ encoding: String.Encoding = .utf8, options: [writingOptionsKeys: Any], maxObjectDepth: Int = 10) throws -> String? {
         guard maxObjectDepth > 0 else { throw SwiftyJSONError.invalidJSON }
         switch content {
         case .dictionary:
@@ -1137,8 +1137,8 @@ private let falseObjCType = String(cString: falseNumber.objCType)
 
 // MARK: - NSNumber: Comparable
 
-extension NSNumber {
-    fileprivate var isBool: Bool {
+private extension NSNumber {
+     var isBool: Bool {
         let objCType = String(cString: self.objCType)
         if (self.compare(trueNumber) == .orderedSame && objCType == trueObjCType) || (self.compare(falseNumber) == .orderedSame && objCType == falseObjCType) {
             return true
@@ -1148,7 +1148,7 @@ extension NSNumber {
     }
 }
 
-func == (lhs: NSNumber, rhs: NSNumber) -> Bool {
+private func == (lhs: NSNumber, rhs: NSNumber) -> Bool {
     switch (lhs.isBool, rhs.isBool) {
     case (false, true): return false
     case (true, false): return false
@@ -1156,11 +1156,11 @@ func == (lhs: NSNumber, rhs: NSNumber) -> Bool {
     }
 }
 
-func != (lhs: NSNumber, rhs: NSNumber) -> Bool {
+private func != (lhs: NSNumber, rhs: NSNumber) -> Bool {
     return !(lhs == rhs)
 }
 
-func < (lhs: NSNumber, rhs: NSNumber) -> Bool {
+private func < (lhs: NSNumber, rhs: NSNumber) -> Bool {
 
     switch (lhs.isBool, rhs.isBool) {
     case (false, true): return false
@@ -1169,7 +1169,7 @@ func < (lhs: NSNumber, rhs: NSNumber) -> Bool {
     }
 }
 
-func > (lhs: NSNumber, rhs: NSNumber) -> Bool {
+private func > (lhs: NSNumber, rhs: NSNumber) -> Bool {
 
     switch (lhs.isBool, rhs.isBool) {
     case (false, true): return false
@@ -1178,7 +1178,7 @@ func > (lhs: NSNumber, rhs: NSNumber) -> Bool {
     }
 }
 
-func <= (lhs: NSNumber, rhs: NSNumber) -> Bool {
+private func <= (lhs: NSNumber, rhs: NSNumber) -> Bool {
 
     switch (lhs.isBool, rhs.isBool) {
     case (false, true): return false
@@ -1187,7 +1187,7 @@ func <= (lhs: NSNumber, rhs: NSNumber) -> Bool {
     }
 }
 
-func >= (lhs: NSNumber, rhs: NSNumber) -> Bool {
+private func >= (lhs: NSNumber, rhs: NSNumber) -> Bool {
 
     switch (lhs.isBool, rhs.isBool) {
     case (false, true): return false
