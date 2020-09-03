@@ -36,16 +36,16 @@ class LiteralConvertibleTests: XCTestCase {
     }
 
     func testBool() {
-        var jsonTrue: JSON = true
+        let jsonTrue: JSON = true
         XCTAssertEqual(jsonTrue.bool!, true)
         XCTAssertEqual(jsonTrue.boolValue, true)
-        var jsonFalse: JSON = false
+        let jsonFalse: JSON = false
         XCTAssertEqual(jsonFalse.bool!, false)
         XCTAssertEqual(jsonFalse.boolValue, false)
     }
 
     func testString() {
-        var json: JSON = "abcd efg, HIJK;LMn"
+        let json: JSON = "abcd efg, HIJK;LMn"
         XCTAssertEqual(json.string!, "abcd efg, HIJK;LMn")
         XCTAssertEqual(json.stringValue, "abcd efg, HIJK;LMn")
     }
