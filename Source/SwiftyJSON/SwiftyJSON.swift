@@ -1205,69 +1205,47 @@ public enum writingOptionsKeys {
 
 // MARK: - JSON: Codable
 extension JSON: Codable {
-    private static var codableTypes: [Codable.Type] {
-        return [
-            Bool.self,
-            Int.self,
-            Int8.self,
-            Int16.self,
-            Int32.self,
-            Int64.self,
-            UInt.self,
-            UInt8.self,
-            UInt16.self,
-            UInt32.self,
-            UInt64.self,
-            Double.self,
-            String.self,
-            [JSON].self,
-            [String: JSON].self
-        ]
-    }
     public init(from decoder: Decoder) throws {
-        var object: Any?
-
-        if let container = try? decoder.singleValueContainer(), !container.decodeNil() {
-            for type in JSON.codableTypes {
-                if object != nil {
-                    break
-                }
-                // try to decode value
-                switch type {
-                case let boolType as Bool.Type:
-                    object = try? container.decode(boolType)
-                case let intType as Int.Type:
-                    object = try? container.decode(intType)
-                case let int8Type as Int8.Type:
-                    object = try? container.decode(int8Type)
-                case let int32Type as Int32.Type:
-                    object = try? container.decode(int32Type)
-                case let int64Type as Int64.Type:
-                    object = try? container.decode(int64Type)
-                case let uintType as UInt.Type:
-                    object = try? container.decode(uintType)
-                case let uint8Type as UInt8.Type:
-                    object = try? container.decode(uint8Type)
-                case let uint16Type as UInt16.Type:
-                    object = try? container.decode(uint16Type)
-                case let uint32Type as UInt32.Type:
-                    object = try? container.decode(uint32Type)
-                case let uint64Type as UInt64.Type:
-                    object = try? container.decode(uint64Type)
-                case let doubleType as Double.Type:
-                    object = try? container.decode(doubleType)
-                case let stringType as String.Type:
-                    object = try? container.decode(stringType)
-                case let jsonValueArrayType as [JSON].Type:
-                    object = try? container.decode(jsonValueArrayType)
-                case let jsonValueDictType as [String: JSON].Type:
-                    object = try? container.decode(jsonValueDictType)
-                default:
-                    break
-                }
-            }
+        guard
+            let container = try? decoder.singleValueContainer(),
+            !container.decodeNil()
+        else {
+            self = .null
+            return
         }
-        self.init(object ?? NSNull())
+        if let value = try? container.decode(Bool.self) {
+            self = .init(content: .bool(value), error: nil)
+        } else if let value = try? container.decode(Int.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(Int8.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(Int16.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(Int32.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(Int64.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(UInt.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(UInt8.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(UInt16.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(UInt32.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(UInt64.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(Double.self) {
+            self = .init(content: .number(value as NSNumber), error: nil)
+        } else if let value = try? container.decode(String.self) {
+            self = .init(content: .string(value), error: nil)
+        } else if let value = try? container.decode([JSON].self) {
+            self = .init(value)
+        } else if let value = try? container.decode([String: JSON].self) {
+            self = .init(value)
+        } else {
+            self = .null
+        }
     }
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
